@@ -10,7 +10,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { apiClient } from '@/lib/api-client';
 import { DashboardLayout } from '@/components/DashboardLayout';
@@ -106,7 +106,7 @@ export default function SitesPage() {
               <Input
                 placeholder="Search sites..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                 iconLeft={<Search size={20} />}
               />
             </div>
