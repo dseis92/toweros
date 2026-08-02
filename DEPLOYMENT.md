@@ -18,17 +18,20 @@ This guide covers deploying TowerOS to production using Vercel (web) and other h
 3. Import your GitHub repository: `dseis92/toweros`
 4. Configure the project:
    - **Framework Preset**: Next.js
-   - **Root Directory**: `apps/web`
-   - **Build Command**: `pnpm turbo build --filter=@tower/web`
+   - **Root Directory**: Leave as `.` (monorepo root)
+   - **Build Command**: `pnpm install && pnpm --filter @tower/shared build && pnpm --filter @tower/ui build && pnpm --filter @tower/validators build && pnpm --filter @tower/web build`
    - **Install Command**: `pnpm install`
-   - **Output Directory**: `.next`
+   - **Output Directory**: `apps/web/.next`
 
 5. Add Environment Variables:
    ```
-   NEXT_PUBLIC_API_URL=https://your-api-domain.com
+   NEXT_PUBLIC_API_URL=http://localhost:3000
    ```
+   *(Update this after deploying the API)*
 
 6. Click "Deploy"
+
+**Note**: The monorepo build command builds all dependencies (@tower/shared, @tower/ui, @tower/validators) before building the web app.
 
 ### Via Vercel CLI
 
