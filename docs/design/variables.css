@@ -1,0 +1,320 @@
+/**
+ * TowerOS Design Tokens - CSS Variables
+ *
+ * Usage:
+ * color: var(--color-primary-500);
+ * padding: var(--spacing-4);
+ * font-size: var(--text-body);
+ */
+
+:root {
+  /* ========================================
+   * COLORS - Brand
+   * ======================================== */
+  --color-primary-500: #0066CC;
+  --color-primary-400: #3385D6;
+  --color-primary-600: #0052A3;
+  --color-primary-700: #003D7A;
+  --color-primary-800: #002952;
+
+  /* ========================================
+   * COLORS - Neutral Grays
+   * ======================================== */
+  --color-gray-50: #FAFAFA;
+  --color-gray-100: #F5F5F5;
+  --color-gray-200: #EEEEEE;
+  --color-gray-300: #E0E0E0;
+  --color-gray-400: #BDBDBD;
+  --color-gray-500: #9E9E9E;
+  --color-gray-600: #757575;
+  --color-gray-700: #616161;
+  --color-gray-800: #424242;
+  --color-gray-900: #212121;
+
+  /* ========================================
+   * COLORS - Semantic
+   * ======================================== */
+  --color-success-400: #33C073;
+  --color-success-500: #00B050;
+  --color-success-600: #008A3D;
+
+  --color-warning-400: #FFA933;
+  --color-warning-500: #FF9500;
+  --color-warning-600: #CC7700;
+
+  --color-danger-400: #FF6259;
+  --color-danger-500: #FF3B30;
+  --color-danger-600: #CC2F26;
+
+  --color-info-400: #339BFF;
+  --color-info-500: #007AFF;
+  --color-info-600: #0062CC;
+
+  /* ========================================
+   * COLORS - Sector Colors
+   * ======================================== */
+  --color-sector-alpha: #FF3B30;
+  --color-sector-beta: #007AFF;
+  --color-sector-gamma: #00B050;
+  --color-sector-delta: #FF9500;
+
+  /* ========================================
+   * COLORS - Semantic Aliases (Light Mode)
+   * ======================================== */
+  --color-bg-primary: #FFFFFF;
+  --color-bg-secondary: #FAFAFA;
+  --color-bg-tertiary: #F5F5F5;
+  --color-bg-elevated: #FFFFFF;
+
+  --color-text-primary: #212121;
+  --color-text-secondary: #616161;
+  --color-text-tertiary: #9E9E9E;
+  --color-text-disabled: #BDBDBD;
+  --color-text-inverse: #FFFFFF;
+
+  --color-border-default: #E0E0E0;
+  --color-border-subtle: #EEEEEE;
+  --color-border-strong: #BDBDBD;
+
+  /* ========================================
+   * SPACING (8px base unit)
+   * ======================================== */
+  --spacing-0: 0px;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 24px;
+  --spacing-6: 32px;
+  --spacing-7: 40px;
+  --spacing-8: 48px;
+  --spacing-9: 64px;
+  --spacing-10: 80px;
+
+  /* ========================================
+   * TYPOGRAPHY - Font Families
+   * ======================================== */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Roboto', sans-serif;
+  --font-mono: 'SF Mono', Consolas, 'Courier New', monospace;
+
+  /* ========================================
+   * TYPOGRAPHY - Font Sizes (Mobile)
+   * ======================================== */
+  --text-display: 32px;
+  --text-h1: 28px;
+  --text-h2: 24px;
+  --text-h3: 20px;
+  --text-h4: 18px;
+  --text-body: 16px;
+  --text-body-small: 14px;
+  --text-caption: 12px;
+  --text-overline: 11px;
+
+  /* ========================================
+   * TYPOGRAPHY - Line Heights
+   * ======================================== */
+  --leading-display: 40px;
+  --leading-h1: 36px;
+  --leading-h2: 32px;
+  --leading-h3: 28px;
+  --leading-h4: 24px;
+  --leading-body: 24px;
+  --leading-body-small: 20px;
+  --leading-caption: 16px;
+
+  /* ========================================
+   * TYPOGRAPHY - Font Weights
+   * ======================================== */
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* ========================================
+   * BORDER RADIUS
+   * ======================================== */
+  --radius-none: 0px;
+  --radius-sm: 4px;
+  --radius-base: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* ========================================
+   * SHADOWS
+   * ======================================== */
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-2: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-3: 0 4px 8px rgba(0, 0, 0, 0.12);
+  --shadow-4: 0 8px 16px rgba(0, 0, 0, 0.16);
+  --shadow-5: 0 16px 32px rgba(0, 0, 0, 0.20);
+
+  /* ========================================
+   * ANIMATION - Duration
+   * ======================================== */
+  --duration-fast: 100ms;
+  --duration-base: 200ms;
+  --duration-moderate: 300ms;
+  --duration-slow: 500ms;
+
+  /* ========================================
+   * ANIMATION - Easing
+   * ======================================== */
+  --ease-out: cubic-bezier(0.0, 0.0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0.0, 1, 1);
+  --ease: cubic-bezier(0.4, 0.0, 0.2, 1);
+
+  /* ========================================
+   * BREAKPOINTS
+   * ======================================== */
+  --breakpoint-mobile: 768px;
+  --breakpoint-tablet: 1024px;
+
+  /* ========================================
+   * COMPONENT SIZES
+   * ======================================== */
+  --button-height-mobile: 48px;
+  --button-height-web: 40px;
+  --input-height-mobile: 48px;
+  --input-height-web: 40px;
+  --icon-size-sm: 16px;
+  --icon-size-md: 24px;
+  --icon-size-lg: 32px;
+  --icon-size-xl: 48px;
+}
+
+/* ========================================
+ * DARK MODE
+ * ======================================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark backgrounds */
+    --color-bg-primary: #121212;
+    --color-bg-secondary: #1E1E1E;
+    --color-bg-tertiary: #2C2C2C;
+    --color-bg-elevated: #2C2C2C;
+
+    /* Dark text */
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #B3B3B3;
+    --color-text-tertiary: #808080;
+    --color-text-disabled: #4D4D4D;
+    --color-text-inverse: #212121;
+
+    /* Dark borders */
+    --color-border-default: #3C3C3C;
+    --color-border-subtle: #2C2C2C;
+    --color-border-strong: #4D4D4D;
+
+    /* Adjusted brand colors for dark mode */
+    --color-primary-500: #3385D6;
+    --color-primary-600: #0066CC;
+
+    /* Adjusted shadows (subtle highlights instead) */
+    --shadow-1: 0 1px 0 rgba(255, 255, 255, 0.05);
+    --shadow-2: 0 1px 0 rgba(255, 255, 255, 0.08);
+    --shadow-3: 0 2px 0 rgba(255, 255, 255, 0.10);
+    --shadow-4: 0 4px 0 rgba(255, 255, 255, 0.12);
+    --shadow-5: 0 8px 0 rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* ========================================
+ * FORCED DARK MODE CLASS
+ * ======================================== */
+.dark {
+  /* Same as @media dark mode */
+  --color-bg-primary: #121212;
+  --color-bg-secondary: #1E1E1E;
+  --color-bg-tertiary: #2C2C2C;
+  --color-bg-elevated: #2C2C2C;
+
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #B3B3B3;
+  --color-text-tertiary: #808080;
+  --color-text-disabled: #4D4D4D;
+  --color-text-inverse: #212121;
+
+  --color-border-default: #3C3C3C;
+  --color-border-subtle: #2C2C2C;
+  --color-border-strong: #4D4D4D;
+
+  --color-primary-500: #3385D6;
+  --color-primary-600: #0066CC;
+
+  --shadow-1: 0 1px 0 rgba(255, 255, 255, 0.05);
+  --shadow-2: 0 1px 0 rgba(255, 255, 255, 0.08);
+  --shadow-3: 0 2px 0 rgba(255, 255, 255, 0.10);
+  --shadow-4: 0 4px 0 rgba(255, 255, 255, 0.12);
+  --shadow-5: 0 8px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* ========================================
+ * WEB RESPONSIVE OVERRIDES
+ * ======================================== */
+@media (min-width: 768px) {
+  :root {
+    /* Larger typography for web */
+    --text-display: 48px;
+    --text-h1: 36px;
+    --text-h2: 30px;
+    --text-h3: 24px;
+    --text-h4: 20px;
+
+    --leading-display: 56px;
+    --leading-h1: 44px;
+    --leading-h2: 38px;
+    --leading-h3: 32px;
+    --leading-h4: 28px;
+  }
+}
+
+/* ========================================
+ * UTILITY CLASSES (Optional)
+ * ======================================== */
+
+/* Spacing utilities */
+.p-0 { padding: var(--spacing-0); }
+.p-1 { padding: var(--spacing-1); }
+.p-2 { padding: var(--spacing-2); }
+.p-3 { padding: var(--spacing-3); }
+.p-4 { padding: var(--spacing-4); }
+.p-5 { padding: var(--spacing-5); }
+.p-6 { padding: var(--spacing-6); }
+
+.m-0 { margin: var(--spacing-0); }
+.m-1 { margin: var(--spacing-1); }
+.m-2 { margin: var(--spacing-2); }
+.m-3 { margin: var(--spacing-3); }
+.m-4 { margin: var(--spacing-4); }
+.m-5 { margin: var(--spacing-5); }
+.m-6 { margin: var(--spacing-6); }
+
+/* Text utilities */
+.text-primary { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-tertiary { color: var(--color-text-tertiary); }
+
+/* Background utilities */
+.bg-primary { background-color: var(--color-bg-primary); }
+.bg-secondary { background-color: var(--color-bg-secondary); }
+
+/* Border utilities */
+.border { border: 1px solid var(--color-border-default); }
+.border-subtle { border: 1px solid var(--color-border-subtle); }
+
+/* Rounded utilities */
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded { border-radius: var(--radius-base); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-full { border-radius: var(--radius-full); }
+
+/* Shadow utilities */
+.shadow-1 { box-shadow: var(--shadow-1); }
+.shadow-2 { box-shadow: var(--shadow-2); }
+.shadow-3 { box-shadow: var(--shadow-3); }
+.shadow-4 { box-shadow: var(--shadow-4); }
+.shadow-5 { box-shadow: var(--shadow-5); }

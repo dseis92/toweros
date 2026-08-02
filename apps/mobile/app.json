@@ -1,0 +1,62 @@
+{
+  "expo": {
+    "name": "TowerOS",
+    "slug": "toweros-mobile",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "scheme": "toweros",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0066CC"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.toweros.mobile",
+      "infoPlist": {
+        "NSCameraUsageDescription": "TowerOS needs camera access to capture equipment photos and barcodes.",
+        "NSLocationWhenInUseUsageDescription": "TowerOS needs location access to tag photos and work orders with GPS coordinates.",
+        "NSPhotoLibraryUsageDescription": "TowerOS needs photo library access to save and upload equipment photos.",
+        "NSFaceIDUsageDescription": "TowerOS uses Face ID for secure biometric authentication."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0066CC"
+      },
+      "package": "com.toweros.mobile",
+      "permissions": [
+        "CAMERA",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow TowerOS to capture equipment photos and barcodes."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow TowerOS to tag work with GPS coordinates."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

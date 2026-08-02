@@ -1,0 +1,36 @@
+{
+  "name": "@tower/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^14.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@tower/ui": "workspace:*",
+    "@tower/validators": "workspace:*",
+    "zustand": "^4.4.7",
+    "axios": "^1.6.5",
+    "date-fns": "^3.2.0",
+    "lucide-react": "^0.316.0",
+    "recharts": "^2.10.3",
+    "socket.io-client": "^4.6.1",
+    "js-cookie": "^3.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "@types/js-cookie": "^3.0.6",
+    "typescript": "^5.3.3",
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1"
+  }
+}

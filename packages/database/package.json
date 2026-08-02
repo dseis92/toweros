@@ -1,0 +1,35 @@
+{
+  "name": "@tower/database",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schema/index.ts",
+    "./client": "./src/client.ts"
+  },
+  "scripts": {
+    "generate": "drizzle-kit generate",
+    "migrate": "tsx src/migrate.ts",
+    "seed": "tsx src/seed.ts",
+    "reset": "tsx src/reset.ts",
+    "studio": "drizzle-kit studio",
+    "push": "drizzle-kit push",
+    "check": "drizzle-kit check",
+    "db:setup": "pnpm generate && pnpm migrate && pnpm seed"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.32.0",
+    "postgres": "^3.4.0",
+    "ulid": "^2.3.0",
+    "dotenv": "^16.4.5",
+    "bcrypt": "^5.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/bcrypt": "^5.0.2",
+    "drizzle-kit": "^0.23.0",
+    "tsx": "^4.16.0",
+    "typescript": "^5.5.0"
+  }
+}

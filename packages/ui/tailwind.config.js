@@ -1,0 +1,152 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ['./src/web/**/*.{ts,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        // Brand colors
+        primary: {
+          400: '#3385D6',
+          500: '#0066CC',
+          600: '#0052A3',
+          700: '#003D7A',
+          800: '#002952',
+        },
+        // Semantic colors
+        success: {
+          50: '#E8F5E9',
+          100: '#C8E6C9',
+          200: '#A5D6A7',
+          400: '#33C073',
+          500: '#00B050',
+          600: '#008A3D',
+        },
+        warning: {
+          50: '#FFF3E0',
+          100: '#FFE0B2',
+          200: '#FFCC80',
+          400: '#FFA933',
+          500: '#FF9500',
+          600: '#CC7700',
+        },
+        danger: {
+          50: '#FFEBEE',
+          100: '#FFCDD2',
+          200: '#EF9A9A',
+          400: '#FF6259',
+          500: '#FF3B30',
+          600: '#CC2F26',
+        },
+        info: {
+          50: '#E3F2FD',
+          100: '#BBDEFB',
+          200: '#90CAF9',
+          400: '#339BFF',
+          500: '#007AFF',
+          600: '#0062CC',
+        },
+        // Neutral grays
+        gray: {
+          50: '#FAFAFA',
+          100: '#F5F5F5',
+          200: '#EEEEEE',
+          300: '#E0E0E0',
+          400: '#BDBDBD',
+          500: '#9E9E9E',
+          600: '#757575',
+          700: '#616161',
+          800: '#424242',
+          900: '#212121',
+        },
+        // Sector colors
+        'sector-alpha': '#FF3B30',
+        'sector-beta': '#007AFF',
+        'sector-gamma': '#00B050',
+        'sector-delta': '#FF9500',
+      },
+      spacing: {
+        0: '0px',
+        1: '4px',
+        2: '8px',
+        3: '12px',
+        4: '16px',
+        5: '24px',
+        6: '32px',
+        7: '40px',
+        8: '48px',
+        9: '64px',
+        10: '80px',
+      },
+      borderRadius: {
+        none: '0px',
+        sm: '4px',
+        base: '8px',
+        md: '12px',
+        lg: '16px',
+        xl: '24px',
+        full: '9999px',
+      },
+      boxShadow: {
+        1: '0 1px 2px rgba(0, 0, 0, 0.06)',
+        2: '0 2px 4px rgba(0, 0, 0, 0.08)',
+        3: '0 4px 8px rgba(0, 0, 0, 0.12)',
+        4: '0 8px 16px rgba(0, 0, 0, 0.16)',
+        5: '0 16px 32px rgba(0, 0, 0, 0.20)',
+      },
+      transitionDuration: {
+        fast: '100ms',
+        base: '200ms',
+        moderate: '300ms',
+        slow: '500ms',
+      },
+      transitionTimingFunction: {
+        'ease-out': 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+        'ease-in': 'cubic-bezier(0.4, 0.0, 1, 1)',
+        ease: 'cubic-bezier(0.4, 0.0, 0.2, 1)',
+      },
+      fontFamily: {
+        sans: [
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'Inter',
+          'Roboto',
+          'sans-serif',
+        ],
+        mono: ['SF Mono', 'Consolas', 'Courier New', 'monospace'],
+      },
+      fontSize: {
+        xs: '12px',
+        sm: '14px',
+        base: '16px',
+        lg: '18px',
+        xl: '20px',
+        '2xl': '24px',
+        '3xl': '28px',
+        '4xl': '32px',
+        '5xl': '36px',
+        '6xl': '48px',
+      },
+      lineHeight: {
+        tight: '1.2',
+        normal: '1.5',
+        relaxed: '1.75',
+      },
+      keyframes: {
+        'in': {
+          '0%': { opacity: '0', transform: 'translateY(-10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'out': {
+          '0%': { opacity: '1', transform: 'translateY(0)' },
+          '100%': { opacity: '0', transform: 'translateY(-10px)' },
+        },
+      },
+      animation: {
+        'in': 'in 200ms ease-out',
+        'out': 'out 200ms ease-in',
+      },
+    },
+  },
+  plugins: [],
+};

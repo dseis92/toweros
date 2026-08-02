@@ -1,0 +1,42 @@
+{
+  "name": "tower-os",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Field Operating System for Telecommunications Construction",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "type-check": "turbo run type-check",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "setup": "bash scripts/setup-env.sh",
+    "setup:keys": "bash scripts/generate-jwt-keys.sh",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "db:generate": "pnpm --filter @tower/database generate",
+    "db:migrate": "pnpm --filter @tower/database migrate",
+    "db:seed": "pnpm --filter @tower/database seed",
+    "db:reset": "pnpm --filter @tower/database reset",
+    "db:studio": "pnpm --filter @tower/database studio",
+    "db:setup": "pnpm db:generate && pnpm db:migrate && pnpm db:seed"
+  },
+  "devDependencies": {
+    "@turbo/gen": "^2.0.0",
+    "turbo": "^2.0.0",
+    "prettier": "^3.3.0",
+    "typescript": "^5.5.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.6.0"
+}

@@ -1,0 +1,6 @@
+# Ignore all JWT keys
+*.pem
+*.key
+
+# Keep this .gitignore file
+!.gitignore

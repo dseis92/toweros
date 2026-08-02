@@ -1,0 +1,971 @@
+openapi: 3.1.0
+
+info:
+  title: TowerOS API
+  version: 1.0.0
+  description: |
+    Field Operating System API for Telecommunications Construction
+
+    ## Authentication
+    All endpoints (except `/auth/*`) require Bearer token authentication.
+
+    ## Rate Limiting
+    - Anonymous: 10 req/min
+    - Authenticated: 100 req/min
+    - Premium: 1000 req/min
+
+  contact:
+    name: TowerOS API Support
+    email: api@toweros.com
+  license:
+    name: Proprietary
+
+servers:
+  - url: https://api.toweros.com/api/v1
+    description: Production
+  - url: https://staging-api.toweros.com/api/v1
+    description: Staging
+  - url: http://localhost:3000/api/v1
+    description: Local Development
+
+tags:
+  - name: Authentication
+    description: User authentication and authorization
+  - name: Sites
+    description: Cell site management (digital twin)
+  - name: Equipment
+    description: Equipment and connection management
+  - name: Work Orders
+    description: Work order and task management
+  - name: Photos
+    description: Photo upload and retrieval
+  - name: Documents
+    description: Document management
+  - name: Sync
+    description: Offline synchronization
+  - name: Users
+    description: User management
+  - name: Analytics
+    description: Reporting and analytics
+
+security:
+  - BearerAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # ========================================
+    # Common Schemas
+    # ========================================
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          enum:
+            - VALIDATION_ERROR
+            - AUTHENTICATION_REQUIRED
+            - INVALID_TOKEN
+            - TOKEN_EXPIRED
+            - INSUFFICIENT_PERMISSIONS
+            - RESOURCE_NOT_FOUND
+            - DUPLICATE_RESOURCE
+            - BUSINESS_LOGIC_ERROR
+            - RATE_LIMIT_EXCEEDED
+            - INTERNAL_SERVER_ERROR
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+        requestId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+        total:
+          type: integer
+        totalPages:
+          type: integer
+        hasNext:
+          type: boolean
+        hasPrev:
+          type: boolean
+
+    # ========================================
+    # Authentication Schemas
+    # ========================================
+
+    RegisterRequest:
+      type: object
+      required:
+        - company
+        - user
+      properties:
+        company:
+          type: object
+          required:
+            - name
+            - type
+          properties:
+            name:
+              type: string
+              minLength: 1
+              maxLength: 255
+            type:
+              type: string
+              enum: [CONTRACTOR, CARRIER, OWNER]
+        user:
+          type: object
+          required:
+            - email
+            - password
+            - firstName
+            - lastName
+          properties:
+            email:
+              type: string
+              format: email
+            password:
+              type: string
+              minLength: 12
+            firstName:
+              type: string
+            lastName:
+              type: string
+            phone:
+              type: string
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+        - deviceId
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        deviceId:
+          type: string
+        deviceName:
+          type: string
+
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        tokens:
+          type: object
+          properties:
+            accessToken:
+              type: string
+            refreshToken:
+              type: string
+            expiresIn:
+              type: integer
+              description: Access token expiration in seconds
+
+    # ========================================
+    # User Schemas
+    # ========================================
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        companyId:
+          type: string
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        role:
+          type: string
+          enum:
+            - SUPER_ADMIN
+            - COMPANY_ADMIN
+            - PROJECT_MANAGER
+            - FOREMAN
+            - TECHNICIAN
+            - INSPECTOR
+            - CLIENT
+        avatarUrl:
+          type: string
+          format: uri
+        status:
+          type: string
+          enum: [ACTIVE, INACTIVE, SUSPENDED]
+        createdAt:
+          type: string
+          format: date-time
+
+    # ========================================
+    # Site Schemas
+    # ========================================
+
+    Site:
+      type: object
+      properties:
+        id:
+          type: string
+        companyId:
+          type: string
+        name:
+          type: string
+        siteCode:
+          type: string
+        carrier:
+          type: string
+          enum: [ATT, VERIZON, TMOBILE, DISH, US_CELLULAR, OTHER]
+        location:
+          type: object
+          properties:
+            latitude:
+              type: number
+              minimum: -90
+              maximum: 90
+            longitude:
+              type: number
+              minimum: -180
+              maximum: 180
+            address:
+              $ref: '#/components/schemas/Address'
+        siteType:
+          type: string
+          enum:
+            - MONOPOLE
+            - LATTICE_TOWER
+            - GUYED_TOWER
+            - ROOFTOP
+            - WATER_TANK
+            - SMALL_CELL
+            - DAS
+        status:
+          type: string
+          enum:
+            - PLANNED
+            - PERMITTING
+            - CONSTRUCTION
+            - TESTING
+            - INSPECTION
+            - PUNCH_LIST
+            - ACCEPTED
+            - ON_AIR
+            - MAINTENANCE
+            - DECOMMISSIONED
+        towerHeightFt:
+          type: number
+        elevationFt:
+          type: number
+        onAirDate:
+          type: string
+          format: date
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateSiteRequest:
+      type: object
+      required:
+        - name
+        - carrier
+        - latitude
+        - longitude
+        - address
+        - siteType
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        siteCode:
+          type: string
+        carrier:
+          type: string
+          enum: [ATT, VERIZON, TMOBILE, DISH, US_CELLULAR, OTHER]
+        latitude:
+          type: number
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          minimum: -180
+          maximum: 180
+        address:
+          $ref: '#/components/schemas/Address'
+        siteType:
+          type: string
+          enum: [MONOPOLE, LATTICE_TOWER, GUYED_TOWER, ROOFTOP, WATER_TANK, SMALL_CELL, DAS]
+        towerHeightFt:
+          type: number
+          minimum: 0
+        elevationFt:
+          type: number
+
+    Address:
+      type: object
+      required:
+        - street
+        - city
+        - state
+        - zip
+        - country
+      properties:
+        street:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+          minLength: 2
+          maxLength: 2
+        zip:
+          type: string
+          pattern: '^\d{5}$'
+        country:
+          type: string
+          default: USA
+
+    # ========================================
+    # Equipment Schemas
+    # ========================================
+
+    Equipment:
+      type: object
+      properties:
+        id:
+          type: string
+        siteId:
+          type: string
+        sectorId:
+          type: string
+        equipmentType:
+          type: string
+          enum:
+            - ANTENNA
+            - RADIO_RRU
+            - RADIO_BBU
+            - RET
+            - HYBRID_CABLE
+            - FIBER_CABLE
+            - COAX_CABLE
+            - POWER_CABLE
+            - RECTIFIER
+            - BATTERY
+            - BREAKER
+            - GROUNDING_KIT
+            - MOUNT
+            - BRACKET
+            - CABINET
+        manufacturer:
+          type: string
+        model:
+          type: string
+        serialNumber:
+          type: string
+        status:
+          type: string
+          enum: [ORDERED, RECEIVED, STAGED, INSTALLED, TESTED, IN_SERVICE, FAILED, REMOVED]
+        installationDate:
+          type: string
+          format: date
+        mountHeightFt:
+          type: number
+        specifications:
+          type: object
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateEquipmentRequest:
+      type: object
+      required:
+        - siteId
+        - equipmentType
+        - category
+        - manufacturer
+        - model
+      properties:
+        siteId:
+          type: string
+        sectorId:
+          type: string
+        equipmentType:
+          type: string
+        category:
+          type: string
+          enum: [RF, POWER, STRUCTURAL, CONNECTIVITY, SAFETY, BACKHAUL, MONITORING]
+        manufacturer:
+          type: string
+        model:
+          type: string
+        serialNumber:
+          type: string
+        mountLocation:
+          type: string
+        mountHeightFt:
+          type: number
+        specifications:
+          type: object
+
+    # ========================================
+    # Work Order Schemas
+    # ========================================
+
+    WorkOrder:
+      type: object
+      properties:
+        id:
+          type: string
+        workOrderNumber:
+          type: string
+        title:
+          type: string
+        siteId:
+          type: string
+        workType:
+          type: string
+          enum:
+            - NEW_BUILD
+            - MODERNIZATION
+            - DECOMMISSION
+            - MAINTENANCE
+            - REPAIR
+            - INSPECTION
+            - TESTING
+            - EMERGENCY
+        status:
+          type: string
+          enum:
+            - DRAFT
+            - SCHEDULED
+            - ASSIGNED
+            - MOBILIZED
+            - IN_PROGRESS
+            - ON_HOLD
+            - TESTING
+            - INSPECTION
+            - PUNCH_LIST
+            - COMPLETED
+            - ACCEPTED
+            - CANCELLED
+        priority:
+          type: string
+          enum: [LOW, NORMAL, HIGH, URGENT]
+        scheduledStart:
+          type: string
+          format: date-time
+        scheduledEnd:
+          type: string
+          format: date-time
+        progressPercentage:
+          type: integer
+          minimum: 0
+          maximum: 100
+        tasksCompleted:
+          type: integer
+        tasksTotal:
+          type: integer
+
+    CreateWorkOrderRequest:
+      type: object
+      required:
+        - siteId
+        - title
+        - workType
+        - scheduledStart
+        - scheduledEnd
+      properties:
+        siteId:
+          type: string
+        projectId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        workType:
+          type: string
+        priority:
+          type: string
+          enum: [LOW, NORMAL, HIGH, URGENT]
+          default: NORMAL
+        scheduledStart:
+          type: string
+          format: date-time
+        scheduledEnd:
+          type: string
+          format: date-time
+        assignedToCrewId:
+          type: string
+        estimatedCost:
+          type: number
+        laborHoursEstimated:
+          type: number
+
+    # ========================================
+    # Photo Schemas
+    # ========================================
+
+    Photo:
+      type: object
+      properties:
+        id:
+          type: string
+        siteId:
+          type: string
+        equipmentId:
+          type: string
+        filename:
+          type: string
+        originalUrl:
+          type: string
+          format: uri
+        thumbnailUrl:
+          type: string
+          format: uri
+        category:
+          type: string
+          enum:
+            - SITE_OVERVIEW
+            - EQUIPMENT_INSTALLED
+            - EQUIPMENT_CLOSEUP
+            - BEFORE
+            - AFTER
+            - INSPECTION_FINDING
+            - SAFETY_ISSUE
+            - TEST_RESULT
+            - LABEL
+            - DOCUMENTATION
+            - DAMAGE
+            - OTHER
+        caption:
+          type: string
+        takenAt:
+          type: string
+          format: date-time
+        gpsLatitude:
+          type: number
+        gpsLongitude:
+          type: number
+
+paths:
+  # ========================================
+  # Authentication Endpoints
+  # ========================================
+
+  /auth/register:
+    post:
+      tags: [Authentication]
+      summary: Register new company and admin user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Authenticate user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+
+  /auth/refresh:
+    post:
+      tags: [Authentication]
+      summary: Refresh access token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refreshToken]
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '200':
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                  expiresIn:
+                    type: integer
+
+  # ========================================
+  # Site Endpoints
+  # ========================================
+
+  /sites:
+    get:
+      tags: [Sites]
+      summary: List all sites
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: carrier
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sites retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Site'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+    post:
+      tags: [Sites]
+      summary: Create new site
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSiteRequest'
+      responses:
+        '201':
+          description: Site created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Site'
+        '400':
+          description: Validation error
+
+  /sites/{id}:
+    get:
+      tags: [Sites]
+      summary: Get site by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: include
+          in: query
+          description: Related resources to include
+          schema:
+            type: string
+            example: sectors,equipment,workOrders
+      responses:
+        '200':
+          description: Site retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Site'
+        '404':
+          description: Site not found
+
+    patch:
+      tags: [Sites]
+      summary: Update site
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                constructionStart:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: Site updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Site'
+
+    delete:
+      tags: [Sites]
+      summary: Delete site
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Site deleted successfully
+
+  /sites/{id}/timeline:
+    get:
+      tags: [Sites]
+      summary: Get complete site event timeline
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Timeline retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  siteId:
+                    type: string
+                  timeline:
+                    type: array
+                    items:
+                      type: object
+
+  # ========================================
+  # Equipment Endpoints
+  # ========================================
+
+  /equipment:
+    get:
+      tags: [Equipment]
+      summary: List equipment
+      parameters:
+        - name: siteId
+          in: query
+          schema:
+            type: string
+        - name: type
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Equipment retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Equipment'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+    post:
+      tags: [Equipment]
+      summary: Install new equipment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEquipmentRequest'
+      responses:
+        '201':
+          description: Equipment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Equipment'
+
+  # ========================================
+  # Work Order Endpoints
+  # ========================================
+
+  /work-orders:
+    get:
+      tags: [Work Orders]
+      summary: List work orders
+      parameters:
+        - name: siteId
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Work orders retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WorkOrder'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+    post:
+      tags: [Work Orders]
+      summary: Create work order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWorkOrderRequest'
+      responses:
+        '201':
+          description: Work order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkOrder'
+
+  # ========================================
+  # Photo Endpoints
+  # ========================================
+
+  /photos/upload:
+    post:
+      tags: [Photos]
+      summary: Upload photo
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                siteId:
+                  type: string
+                equipmentId:
+                  type: string
+                category:
+                  type: string
+                caption:
+                  type: string
+      responses:
+        '201':
+          description: Photo uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Photo'
